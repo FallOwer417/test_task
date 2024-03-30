@@ -1,45 +1,34 @@
+from gensim.models import fasttext
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
-def levenshtein_distance(s1, s2):
-    """
-    Функция для вычисления расстояния Левенштейна между двумя строками.
-    """
-    m, n = len(s1), len(s2)
-    dp = np.zeros((m+1, n+1), dtype=int)
-
-    for i in range(m+1):
-        dp[i][0] = i
-    for j in range(n+1):
-        dp[0][j] = j
-
-    for i in range(1, m+1):
-        for j in range(1, n+1):
-            cost = 0 if s1[i-1] == s2[j-1] else 1
-            dp[i][j] = min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + cost)
-
-    return dp[m][n]
-
-def find_closest_words(word, dictionary):
-    """
-    Функция для нахождения наиболее близких слов из словаря к опечатанному слову.
-    """
-    closest_words = []
-    min_distance = float('inf')
-
-    for dict_word in dictionary:
-        distance = levenshtein_distance(word, dict_word)
-        if distance < min_distance:
-            closest_words = [dict_word]
-            min_distance = distance
-        elif distance == min_distance:
-            closest_words.append(dict_word)
-
-    return closest_words
-
-# Пример использования:
-dictionary = ["apple", "banana", "cat", "dog", "elephant", "frog"]
-word = "elephan"
-
-closest_words = find_closest_words(word, dictionary)
-print("Опечатанное слово:", word)
-print("Наиболее близкие слова в словаре:", closest_words)
+model = fasttext.load_facebook_vectors('cc.ru.300.bin.gz')
+b = True
+while b:
+    word = input("Введите слово которое хотите проверить: ")
+    embedding_word = model[word].reshape(1, -1)
+    dictionary = {
+        "банан": model["банан"].reshape(1, -1),
+        "апельсин": model["апельсин"].reshape(1, -1),
+        "виноград": model["виноград"].reshape(1, -1),
+        "аптека":model["аптека"].reshape(1,-1),
+        "муравей":model["муравей"].reshape(1,-1,),
+        "фасад":model["фасад"].reshape(1,-1),
+        "огонь":model["огонь"].reshape(1,-1),
+        "зайчик":model["зайчик"].reshape(1,-1,),
+        "ежеминутно":model["ежеминутно"].reshape(1,-1),
+        "винт":model["винт"].reshape(1,-1),
+        "Антарктика":model["Антарктика"].reshape(1,-1),
+        "процент":model["процент"].reshape(1,-1),
+        "слух":model["слух"].reshape(1,-1),
+        "судак":model["судак"].reshape(1,-1),а
+}
+    similarities = {}
+    for key, value in dictionary.items():
+        similarities[key] = cosine_similarity(embedding_word, value)[0][0]
+    most_similar_word = max(similarities, key=similarities.get)
+    similarity_score = similarities[most_similar_word]
+    print(most_similar_word)
+    print("чтобы выйти введите exit, чтобы продолжить введите что угодно")
+    if input() == exit:
+        b = False
