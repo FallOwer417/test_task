@@ -21,7 +21,7 @@ while b:
         "Антарктика":model["Антарктика"].reshape(1,-1),
         "процент":model["процент"].reshape(1,-1),
         "слух":model["слух"].reshape(1,-1),
-        "судак":model["судак"].reshape(1,-1),а
+        "судак":model["судак"].reshape(1,-1),
 }
     similarities = {}
     for key, value in dictionary.items():
